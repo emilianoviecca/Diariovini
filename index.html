@@ -3,12 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#5c1530">
+  <meta name="theme-color" content="#c68d2c">
   <meta name="description" content="Diario personale dei vini bevuti: foto dell'etichetta, data, luogo e dati dal codice a barre.">
   <title>Diario Vini</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="preload" href="vendor/fonts/caveat-brush-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
 </head>
@@ -32,8 +33,8 @@
       <p id="list-count" class="muted" aria-live="polite"></p>
       <ul id="wine-list" class="wine-list"></ul>
       <div id="empty-state" class="empty" hidden>
-        <svg aria-hidden="true" viewBox="0 0 64 64" class="empty-icon"><use href="#glass"/></svg>
-        <p><strong>Nessun vino ancora.</strong></p>
+        <img src="img/empty.svg" alt="" class="empty-art" width="180" height="180">
+        <p class="empty-title">Nessun vino ancora</p>
         <p>Tocca <strong>Aggiungi</strong> per registrare il primo: foto dell'etichetta, e data e luogo si compilano da soli.</p>
       </div>
     </section>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 160" preserveAspectRatio="none">
+  <defs>
+    <filter id="edge" filterUnits="userSpaceOnUse" x="-50" y="-50" width="900" height="260">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02 0.12" numOctaves="4" seed="4" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="30" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="dry" filterUnits="userSpaceOnUse" x="-50" y="-50" width="900" height="260">
+      <feTurbulence type="fractalNoise" baseFrequency="0.003 0.16" numOctaves="2" seed="11" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.4 0 0 0 1.75" result="m"/>
+      <feComposite in="SourceGraphic" in2="m" operator="in" result="t"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.015 0.06" numOctaves="2" seed="3" result="d"/>
+      <feDisplacementMap in="t" in2="d" scale="22" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+  <g filter="url(#edge)"><rect x="-40" y="-40" width="880" height="160" fill="#c68d2c"/></g>
+  <g filter="url(#dry)">
+    <path d="M-30 30 C200 18 500 22 830 34 L830 62 C520 52 220 56 -30 66Z" fill="#a66f1b" opacity=".75"/>
+    <path d="M120 84 C330 76 600 74 830 82 L830 104 C600 98 340 102 140 108Z" fill="#e2b866" opacity=".8"/>
+    <path d="M-30 112 C150 104 360 104 520 112 L500 132 C340 128 150 130 -30 134Z" fill="#a66f1b" opacity=".5"/>
+  </g>
+</svg>

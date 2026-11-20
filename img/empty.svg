@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <filter id="wash" filterUnits="userSpaceOnUse" x="-40" y="-40" width="280" height="280">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="5" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="26" xChannelSelector="R" yChannelSelector="G"/>
+      <feGaussianBlur stdDeviation="1.2"/>
+    </filter>
+    <filter id="dry" filterUnits="userSpaceOnUse" x="-40" y="-40" width="280" height="280">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02 0.22" numOctaves="2" seed="12" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.2 0 0 0 1.95" result="m"/>
+      <feComposite in="SourceGraphic" in2="m" operator="in" result="t"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="4" result="d"/>
+      <feDisplacementMap in="t" in2="d" scale="7" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+  <ellipse cx="100" cy="104" rx="78" ry="70" fill="#d9a441" opacity=".55" filter="url(#wash)"/>
+  <path filter="url(#dry)" fill="#a66f1b" d="M66 84 C90 80 112 80 134 84 C134 104 122 120 100 121 C78 120 66 104 66 84Z"/>
+  <g filter="url(#dry)" fill="none" stroke="#1c2232" stroke-linecap="round">
+    <path stroke-width="6" d="M62 38 C60 62 60 90 70 106 C80 122 120 124 130 106 C140 90 140 62 138 38"/>
+    <path stroke-width="5" d="M100 124 C99 140 101 152 100 166"/>
+    <path stroke-width="7" d="M70 170 C88 166 112 166 132 169"/>
+  </g>
+  <path filter="url(#dry)" fill="#faf3e3" opacity=".9" d="M74 50 C76 46 80 46 80 52 C80 70 82 84 86 96 C80 92 74 76 74 50Z"/>
+  <g fill="#1c2232"><circle cx="152" cy="46" r="3"/><circle cx="160" cy="58" r="1.6"/><circle cx="44" cy="150" r="2"/><circle cx="148" cy="30" r="1.2"/></g>
+</svg>
