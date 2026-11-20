@@ -1,24 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
-    <filter id="dry" filterUnits="userSpaceOnUse" x="-40" y="-40" width="600" height="600">
-      <feTurbulence type="fractalNoise" baseFrequency="0.006 0.12" numOctaves="2" seed="12" result="n"/>
+    <filter id="dry" filterUnits="userSpaceOnUse" x="-60" y="-60" width="640" height="640">
+      <feTurbulence type="fractalNoise" baseFrequency="0.006 0.11" numOctaves="2" seed="12" result="n"/>
       <feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2 0 0 0 1.9" result="m"/>
       <feComposite in="SourceGraphic" in2="m" operator="in" result="t"/>
       <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="4" result="d"/>
-      <feDisplacementMap in="t" in2="d" scale="14" xChannelSelector="R" yChannelSelector="G"/>
+      <feDisplacementMap in="t" in2="d" scale="16" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
+    <filter id="rough" filterUnits="userSpaceOnUse" x="-60" y="-60" width="640" height="640">
+      <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="7" result="d"/>
+      <feDisplacementMap in="SourceGraphic" in2="d" scale="12" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="paper"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3"/>
+      <feColorMatrix values="0 0 0 0 0.45 0 0 0 0 0.32 0 0 0 0 0.12 0 0 0 0.12 0"/></filter>
+    <clipPath id="drop"><path d="M256 64 C300 136 380 204 380 300 A124 124 0 0 1 132 300 C132 204 212 136 256 64Z"/></clipPath>
   </defs>
-  <rect width="512" height="512" fill="#c68d2c"/>
-  <g filter="url(#dry)">
-    <rect x="-20" y="60" width="560" height="70" fill="#a66f1b" opacity=".6"/>
-    <rect x="-20" y="390" width="560" height="60" fill="#e2b866" opacity=".8"/>
-  </g>
-  <path filter="url(#dry)" fill="#8a5a12" d="M170 225 C220 215 292 215 342 225 C342 280 305 318 256 320 C207 318 170 280 170 225Z"/>
-  <g filter="url(#dry)" fill="none" stroke="#1c2232" stroke-linecap="round">
-    <path stroke-width="20" d="M160 110 C154 170 154 240 178 284 C202 328 310 332 334 284 C358 240 358 170 352 110"/>
-    <path stroke-width="17" d="M256 330 C254 360 258 390 256 416"/>
-    <path stroke-width="22" d="M172 424 C222 414 290 414 342 422"/>
-  </g>
-  <path filter="url(#dry)" fill="#faf3e3" d="M190 140 C196 130 206 132 206 146 C206 190 210 222 220 252 C204 242 190 206 190 140Z"/>
-  <g fill="#1c2232"><circle cx="400" cy="130" r="9"/><circle cx="424" cy="160" r="5"/><circle cx="390" cy="96" r="4"/></g>
+  <rect width="512" height="512" fill="#f0deb3"/><rect width="512" height="512" filter="url(#paper)"/>
+  <g filter="url(#dry)"><rect x="-20" y="420" width="560" height="50" fill="#e2b866" opacity=".7"/></g>
+  <path filter="url(#rough)" fill="#c68d2c" d="M256 64 C300 136 380 204 380 300 A124 124 0 0 1 132 300 C132 204 212 136 256 64Z"/>
+  <g clip-path="url(#drop)" filter="url(#dry)"><rect x="100" y="300" width="320" height="140" fill="#8a5a12"/><rect x="100" y="250" width="320" height="40" fill="#a66f1b" opacity=".8"/></g>
+  <path filter="url(#dry)" fill="#faf3e3" d="M188 236 C196 210 214 206 212 232 C206 268 208 300 218 330 C196 316 182 280 188 236Z"/>
+  <path filter="url(#dry)" fill="#1c2232" d="M70 452 C150 418 300 404 448 418 C420 432 330 438 250 446 C180 453 110 462 78 466 C66 466 64 456 70 452Z"/>
+  <g fill="#1c2232"><circle cx="420" cy="120" r="10"/><circle cx="446" cy="152" r="5"/><circle cx="404" cy="86" r="4"/><circle cx="96" cy="140" r="4"/></g>
 </svg>

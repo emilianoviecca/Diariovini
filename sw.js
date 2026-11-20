@@ -1,5 +1,5 @@
 // Service worker: l'app funziona anche offline (la ricerca dei codici richiede rete).
-const CACHE = 'diariovini-v2';
+const CACHE = 'sorsi-v3';
 const SHELL = [
   './', 'index.html', 'manifest.webmanifest', 'css/style.css',
   'js/app.js', 'js/db.js', 'js/media.js', 'js/scanner.js', 'js/lookup.js', 'js/wine-knowledge.js', 'js/ai.js',

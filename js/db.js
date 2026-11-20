@@ -1,4 +1,4 @@
-// Archivio locale (IndexedDB): i vini e le foto restano sul dispositivo.
+// Sorsi — archivio locale (IndexedDB): i vini e le foto restano sul dispositivo.
 const DB_NAME = 'diariovini';
 const DB_VERSION = 1;
 const STORE = 'wines';

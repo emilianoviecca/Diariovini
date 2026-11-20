@@ -46,15 +46,15 @@ jobs:
           cp ../android-signing/debug.keystore ~/.android/debug.keystore
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
-          cp app/build/outputs/apk/debug/app-debug.apk ../diariovini.apk
+          cp app/build/outputs/apk/debug/app-debug.apk ../sorsi.apk
 
       - name: Pubblica release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v1.0.${{ github.run_number }}
-          name: Diario Vini 1.0.${{ github.run_number }}
+          name: Sorsi 1.0.${{ github.run_number }}
           body: |
             APK per Android. Scaricalo dal telefono e aprilo per installarlo
             (al primo avvio Android chiede di consentire l'installazione da questa fonte).
-          files: diariovini.apk
+          files: sorsi.apk
           make_latest: true

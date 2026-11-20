@@ -2,7 +2,7 @@
   "name": "diariovini",
   "version": "1.0.0",
   "private": true,
-  "description": "Diario Vini – app Android (Capacitor) costruita dalla web app",
+  "description": "Sorsi – app Android (Capacitor) costruita dalla web app",
   "scripts": {
     "www": "node scripts/prepare-www.mjs",
     "android": "npm run www && npx cap add android && node scripts/patch-android.mjs && npx cap sync android"

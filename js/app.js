@@ -65,7 +65,7 @@ async function route() {
   const hash = location.hash || '#/';
   const [, page, id] = hash.split('/');
   releaseURLs();
-  let view = 'list', title = 'I miei vini', tab = 'list';
+  let view = 'list', title = 'Sorsi', tab = 'list';
 
   if (page === 'nuovo') { view = 'edit'; title = 'Nuovo vino'; tab = 'edit'; await openForm(null); }
   else if (page === 'modifica' && id) { view = 'edit'; title = 'Modifica vino'; tab = 'list'; await openForm(id); }
@@ -76,7 +76,7 @@ async function route() {
 
   Object.entries(els.views).forEach(([k, el]) => { el.hidden = k !== view; });
   els.title.textContent = title;
-  document.title = `${title} · Diario Vini`;
+  document.title = title === 'Sorsi' ? 'Sorsi' : `${title} · Sorsi`;
   document.querySelectorAll('.tabbar a').forEach(a => {
     if (a.dataset.tab === tab) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
   });
@@ -409,7 +409,7 @@ async function exportJSON() {
     o.thumb = w.thumb ? await blobToDataURL(w.thumb) : null;
     out.push(o);
   }
-  await download(new Blob([JSON.stringify({ app: 'diariovini', version: 1, exportedAt: new Date().toISOString(), wines: out })], { type: 'application/json' }), `diariovini_backup_${stamp()}.json`);
+  await download(new Blob([JSON.stringify({ app: 'sorsi', version: 1, exportedAt: new Date().toISOString(), wines: out })], { type: 'application/json' }), `sorsi_backup_${stamp()}.json`);
   setStatus($('#backup-status'), `Backup di ${all.length} vini pronto.`, 'ok');
 }
 
@@ -420,7 +420,7 @@ async function exportCSV() {
   const head = ['Data', 'Nome', 'Cantina', 'Produttore', 'Annata', 'Tipologia', 'Vitigno', 'Provenienza', 'Gradazione', 'Prezzo', 'Voto', 'Luogo', 'Latitudine', 'Longitudine', 'Codice', 'Note'];
   const q = v => `"${(v ?? '').toString().replace(/"/g, '""')}"`;
   const csv = '﻿' + [head.map(q).join(';'), ...all.map(w => cols.map(c => q(w[c])).join(';'))].join('\r\n');
-  await download(new Blob([csv], { type: 'text/csv;charset=utf-8' }), `diariovini_${stamp()}.csv`);
+  await download(new Blob([csv], { type: 'text/csv;charset=utf-8' }), `sorsi_${stamp()}.csv`);
   setStatus($('#backup-status'), 'Tabella CSV pronta.', 'ok');
 }
 

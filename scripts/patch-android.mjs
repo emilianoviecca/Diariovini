@@ -6,6 +6,7 @@ import { join } from 'node:path';
 const app = 'android/app';
 const res = `${app}/src/main/res`;
 const OCHRE = '#C68D2C';
+const SAND = '#F0DEB3';
 
 // 1. Permessi
 const manifestPath = `${app}/src/main/AndroidManifest.xml`;
@@ -23,11 +24,11 @@ writeFileSync(manifestPath, manifest);
 // 2. Icone
 cpSync('android-res', res, { recursive: true });
 writeFileSync(`${res}/values/ic_launcher_background.xml`,
-  `<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <color name="ic_launcher_background">${OCHRE}</color>\n</resources>\n`);
+  `<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <color name="ic_launcher_background">${SAND}</color>\n</resources>\n`);
 // rimuove il primo piano vettoriale di default (ha la precedenza sui PNG)
 rmSync(`${res}/drawable-v24/ic_launcher_foreground.xml`, { force: true });
 
-// 3. Schermata d'avvio: fondo ocra con l'icona al centro
+// 3. Schermata d'avvio: fondo sabbia con l'icona al centro
 for (const dir of readdirSync(res)) {
   const f = join(res, dir, 'splash.png');
   if (existsSync(f)) rmSync(f);

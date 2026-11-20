@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#c68d2c">
-  <meta name="description" content="Diario personale dei vini bevuti: foto dell'etichetta, data, luogo e dati dal codice a barre.">
-  <title>Diario Vini</title>
+  <meta name="description" content="Sorsi: il diario dei vini bevuti: foto dell'etichetta, data, luogo e dati dal codice a barre.">
+  <title>Sorsi</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
@@ -18,8 +18,8 @@
 
   <header class="app-header" role="banner">
     <h1 class="app-title">
-      <svg class="logo" aria-hidden="true" viewBox="0 0 64 64"><use href="#glass"/></svg>
-      <span id="page-title">I miei vini</span>
+      <svg class="logo" aria-hidden="true" viewBox="0 0 64 64"><use href="#drop"/></svg>
+      <span id="page-title">Sorsi</span>
     </h1>
   </header>
 
@@ -34,7 +34,7 @@
       <ul id="wine-list" class="wine-list"></ul>
       <div id="empty-state" class="empty" hidden>
         <img src="img/empty.svg" alt="" class="empty-art" width="180" height="180">
-        <p class="empty-title">Nessun vino ancora</p>
+        <p class="empty-title">Nessun sorso ancora</p>
         <p>Tocca <strong>Aggiungi</strong> per registrare il primo: foto dell'etichetta, e data e luogo si compilano da soli.</p>
       </div>
     </section>
@@ -224,6 +224,7 @@
 
   <!-- Icone -->
   <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <symbol id="drop" viewBox="0 0 64 64"><path fill="currentColor" d="M32 4c6 9.5 17 19 17 32a17 17 0 0 1-34 0C15 23 26 13.5 32 4zm-6.5 26c-1.6 3.4-1.8 8 .4 11.6.6 1-.9 1.8-1.6.9-3-4.1-2.9-9.4-.6-13 .6-.9 2.2-.4 1.8.5z"/></symbol>
     <symbol id="glass" viewBox="0 0 64 64"><path fill="currentColor" d="M18 6h28c1 9 2 16 0 22-2 7-8 11-12 11.6V54h9a2 2 0 1 1 0 4H21a2 2 0 1 1 0-4h9V39.6C26 39 20 35 18 28c-2-6-1-13 0-22zm3.6 4c-.5 6-.6 11 .9 15.6h19c1.5-4.6 1.4-9.6.9-15.6z"/></symbol>
     <symbol id="i-camera" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M4 7h3l2-3h6l2 3h3v12H4z"/><circle cx="12" cy="13" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
     <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 17l5-5 4 4 3-3 6 6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="15.5" cy="8.5" r="1.5" fill="currentColor"/></symbol>

@@ -1,4 +1,6 @@
-# Diario Vini 🍷
+# Sorsi 🍷
+
+*Il diario dei vini che hai bevuto.*
 
 Web app (PWA) per tenere il diario dei vini bevuti, pensata per il telefono.
 
@@ -32,7 +34,7 @@ vendor/               exifr, ZXing, Leaflet (licenze incluse)
 ## App Android (APK)
 Ad ogni modifica su `main`, GitHub Actions compila l'app Android (Capacitor) e la pubblica tra le Release.
 Link sempre aggiornato all'ultima versione:
-**https://github.com/emilianoviecca/diariovini/releases/latest/download/diariovini.apk**
+**https://github.com/emilianoviecca/diariovini/releases/latest/download/sorsi.apk**
 
 Gli aggiornamenti si installano sopra la versione precedente senza perdere i dati
 (l'APK è sempre firmato con la stessa chiave, in `android-signing/`: è una chiave di debug, non adatta al Play Store).

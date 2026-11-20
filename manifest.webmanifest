@@ -1,7 +1,7 @@
 {
-  "name": "Diario Vini",
-  "short_name": "Vini",
-  "description": "Il tuo diario dei vini: foto dell'etichetta, data, luogo e dati dal codice a barre.",
+  "name": "Sorsi",
+  "short_name": "Sorsi",
+  "description": "Sorsi, il tuo diario dei vini: foto dell'etichetta, data, luogo e dati dal codice a barre.",
   "lang": "it",
   "start_url": "./#/",
   "scope": "./",
