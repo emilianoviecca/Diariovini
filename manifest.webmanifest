@@ -1,0 +1,20 @@
+{
+  "name": "Diario Vini",
+  "short_name": "Vini",
+  "description": "Il tuo diario dei vini: foto dell'etichetta, data, luogo e dati dal codice a barre.",
+  "lang": "it",
+  "start_url": "./#/",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#faf7f5",
+  "theme_color": "#5c1530",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Aggiungi vino", "url": "./#/nuovo", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

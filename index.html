@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#5c1530">
+  <meta name="description" content="Diario personale dei vini bevuti: foto dell'etichetta, data, luogo e dati dal codice a barre.">
+  <title>Diario Vini</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Vai al contenuto</a>
+
+  <header class="app-header" role="banner">
+    <h1 class="app-title">
+      <svg class="logo" aria-hidden="true" viewBox="0 0 64 64"><use href="#glass"/></svg>
+      <span id="page-title">I miei vini</span>
+    </h1>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <!-- ===== LISTA ===== -->
+    <section id="view-list" class="view" aria-labelledby="page-title">
+      <div class="search">
+        <label for="search-input" class="visually-hidden">Cerca tra i vini</label>
+        <input id="search-input" type="search" placeholder="Cerca per nome, cantina, vitigno, luogo…" autocomplete="off">
+      </div>
+      <p id="list-count" class="muted" aria-live="polite"></p>
+      <ul id="wine-list" class="wine-list"></ul>
+      <div id="empty-state" class="empty" hidden>
+        <svg aria-hidden="true" viewBox="0 0 64 64" class="empty-icon"><use href="#glass"/></svg>
+        <p><strong>Nessun vino ancora.</strong></p>
+        <p>Tocca <strong>Aggiungi</strong> per registrare il primo: foto dell'etichetta, e data e luogo si compilano da soli.</p>
+      </div>
+    </section>
+
+    <!-- ===== FORM ===== -->
+    <section id="view-edit" class="view" hidden aria-labelledby="page-title">
+      <form id="wine-form" novalidate>
+        <fieldset class="card">
+          <legend>Etichetta</legend>
+          <div id="photo-preview" class="photo-preview" hidden>
+            <img id="photo-img" alt="Foto dell'etichetta">
+            <button type="button" id="photo-remove" class="btn btn-ghost btn-small">Rimuovi foto</button>
+          </div>
+          <div class="btn-row">
+            <label class="btn btn-primary file-btn">
+              <svg aria-hidden="true" class="ico"><use href="#i-camera"/></svg>
+              Scatta foto
+              <input id="photo-camera" type="file" accept="image/*" capture="environment" class="visually-hidden">
+            </label>
+            <label class="btn btn-secondary file-btn">
+              <svg aria-hidden="true" class="ico"><use href="#i-image"/></svg>
+              Galleria
+              <input id="photo-gallery" type="file" accept="image/*" class="visually-hidden">
+            </label>
+          </div>
+          <button type="button" id="ai-read" class="btn btn-ghost btn-block" hidden>
+            <svg aria-hidden="true" class="ico"><use href="#i-sparkle"/></svg>
+            Leggi l'etichetta con l'AI
+          </button>
+        </fieldset>
+
+        <fieldset class="card">
+          <legend>Codice a barre</legend>
+          <div class="btn-row">
+            <button type="button" id="scan-btn" class="btn btn-primary">
+              <svg aria-hidden="true" class="ico"><use href="#i-barcode"/></svg>
+              Scansiona
+            </button>
+            <button type="button" id="scan-photo-btn" class="btn btn-secondary">Da foto</button>
+          </div>
+          <input id="scan-photo-input" type="file" accept="image/*" class="visually-hidden" tabindex="-1" aria-hidden="true">
+          <div class="field inline-field">
+            <label for="f-barcode">Codice (EAN)</label>
+            <div class="input-with-btn">
+              <input id="f-barcode" name="barcode" inputmode="numeric" pattern="[0-9]*" autocomplete="off">
+              <button type="button" id="lookup-btn" class="btn btn-secondary btn-small">Cerca</button>
+            </div>
+          </div>
+          <p id="lookup-status" class="status" role="status" aria-live="polite"></p>
+        </fieldset>
+
+        <fieldset class="card">
+          <legend>Il vino</legend>
+          <div class="field"><label for="f-name">Nome</label><input id="f-name" name="name" autocomplete="off"></div>
+          <div class="grid-2">
+            <div class="field"><label for="f-winery">Cantina</label><input id="f-winery" name="winery" autocomplete="off"></div>
+            <div class="field"><label for="f-producer">Produttore</label><input id="f-producer" name="producer" autocomplete="off"></div>
+          </div>
+          <div class="grid-2">
+            <div class="field"><label for="f-vintage">Annata</label><input id="f-vintage" name="vintage" inputmode="numeric" maxlength="4" autocomplete="off"></div>
+            <div class="field">
+              <label for="f-type">Tipologia</label>
+              <select id="f-type" name="type">
+                <option value=""></option>
+                <option>Rosso</option><option>Bianco</option><option>Rosato</option>
+                <option>Bollicine</option><option>Dolce / passito</option><option>Fortificato</option><option>Altro</option>
+              </select>
+            </div>
+          </div>
+          <div class="field"><label for="f-grape">Vitigno</label><input id="f-grape" name="grape" autocomplete="off"></div>
+          <div class="field"><label for="f-origin">Provenienza (denominazione, regione, paese)</label><input id="f-origin" name="origin" autocomplete="off"></div>
+          <div class="grid-2">
+            <div class="field"><label for="f-abv">Gradazione (% vol)</label><input id="f-abv" name="abv" inputmode="decimal" autocomplete="off"></div>
+            <div class="field"><label for="f-price">Prezzo (€)</label><input id="f-price" name="price" inputmode="decimal" autocomplete="off"></div>
+          </div>
+        </fieldset>
+
+        <fieldset class="card">
+          <legend>Quando e dove</legend>
+          <div class="field"><label for="f-date">Data</label><input id="f-date" name="date" type="datetime-local"></div>
+          <div class="field">
+            <label for="f-place">Luogo</label>
+            <div class="input-with-btn">
+              <input id="f-place" name="place" autocomplete="off">
+              <button type="button" id="gps-btn" class="btn btn-secondary btn-small">
+                <svg aria-hidden="true" class="ico"><use href="#i-pin"/></svg>
+                <span class="visually-hidden">Rileva posizione</span>
+              </button>
+            </div>
+          </div>
+          <p id="gps-status" class="status" role="status" aria-live="polite"></p>
+        </fieldset>
+
+        <fieldset class="card">
+          <legend>Il mio giudizio</legend>
+          <div class="field">
+            <span class="label" id="rating-label">Voto</span>
+            <div class="rating" role="radiogroup" aria-labelledby="rating-label" id="rating"></div>
+          </div>
+          <div class="field"><label for="f-notes">Note</label><textarea id="f-notes" name="notes" rows="3"></textarea></div>
+        </fieldset>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary btn-block btn-large">Salva</button>
+          <button type="button" id="cancel-btn" class="btn btn-ghost btn-block">Annulla</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ===== DETTAGLIO ===== -->
+    <section id="view-detail" class="view" hidden aria-labelledby="page-title">
+      <div id="detail-body"></div>
+      <div class="btn-row">
+        <button type="button" id="detail-edit" class="btn btn-primary">Modifica</button>
+        <button type="button" id="detail-delete" class="btn btn-danger">Elimina</button>
+      </div>
+    </section>
+
+    <!-- ===== MAPPA ===== -->
+    <section id="view-map" class="view" hidden aria-labelledby="page-title">
+      <div id="map" class="map" role="region" aria-label="Mappa dei luoghi in cui hai bevuto"></div>
+      <p id="map-empty" class="muted" hidden>Nessun vino con posizione da mostrare.</p>
+    </section>
+
+    <!-- ===== IMPOSTAZIONI ===== -->
+    <section id="view-settings" class="view" hidden aria-labelledby="page-title">
+      <div class="card">
+        <h2>Backup</h2>
+        <p class="muted">I vini e le foto restano solo su questo telefono. Fai un backup ogni tanto.</p>
+        <div class="btn-col">
+          <button type="button" id="export-json" class="btn btn-primary">Esporta backup completo (con foto)</button>
+          <button type="button" id="export-csv" class="btn btn-secondary">Esporta tabella CSV (per Excel)</button>
+          <label class="btn btn-secondary file-btn">Importa backup
+            <input id="import-json" type="file" accept="application/json,.json" class="visually-hidden">
+          </label>
+        </div>
+        <p id="backup-status" class="status" role="status" aria-live="polite"></p>
+      </div>
+
+      <div class="card">
+        <h2>Lettura etichetta con AI <span class="tag">facoltativa</span></h2>
+        <p class="muted">Se il codice a barre non basta, Claude legge la foto dell'etichetta e compila i campi (annata, vitigno, denominazione…). Serve una tua chiave API Anthropic: resta salvata solo su questo telefono.</p>
+        <div class="field"><label for="s-apikey">Chiave API Anthropic</label><input id="s-apikey" type="password" autocomplete="off" placeholder="sk-ant-…"></div>
+        <div class="field"><label for="s-model">Modello</label><input id="s-model" autocomplete="off"></div>
+        <button type="button" id="save-settings" class="btn btn-primary">Salva impostazioni</button>
+        <p id="settings-status" class="status" role="status" aria-live="polite"></p>
+      </div>
+
+      <div class="card">
+        <h2>Informazioni</h2>
+        <p class="muted">Dati del codice a barre da <a href="https://world.openfoodfacts.org" rel="noopener">Open Food Facts</a> (database aperto: non tutti i vini ci sono). Indirizzi da <a href="https://www.openstreetmap.org/copyright" rel="noopener">OpenStreetMap</a>.</p>
+        <p class="muted" id="storage-info"></p>
+      </div>
+    </section>
+  </main>
+
+  <nav class="tabbar" aria-label="Sezioni">
+    <a href="#/" data-tab="list"><svg aria-hidden="true" class="ico"><use href="#i-list"/></svg><span>Vini</span></a>
+    <a href="#/nuovo" data-tab="edit" class="tab-add"><svg aria-hidden="true" class="ico"><use href="#i-plus"/></svg><span>Aggiungi</span></a>
+    <a href="#/mappa" data-tab="map"><svg aria-hidden="true" class="ico"><use href="#i-map"/></svg><span>Mappa</span></a>
+    <a href="#/impostazioni" data-tab="settings"><svg aria-hidden="true" class="ico"><use href="#i-gear"/></svg><span>Altro</span></a>
+  </nav>
+
+  <!-- Scanner -->
+  <dialog id="scanner" class="scanner" aria-labelledby="scanner-title">
+    <h2 id="scanner-title" class="visually-hidden">Scansione codice a barre</h2>
+    <video id="scanner-video" playsinline muted></video>
+    <div class="scanner-frame" aria-hidden="true"></div>
+    <p class="scanner-hint" id="scanner-hint">Inquadra il codice a barre della bottiglia</p>
+    <div class="scanner-actions">
+      <button type="button" id="scanner-torch" class="btn btn-secondary" hidden>Torcia</button>
+      <button type="button" id="scanner-close" class="btn btn-light">Chiudi</button>
+    </div>
+  </dialog>
+
+  <!-- Conferma -->
+  <dialog id="confirm" class="confirm" aria-labelledby="confirm-title" aria-describedby="confirm-text">
+    <h2 id="confirm-title">Eliminare questo vino?</h2>
+    <p id="confirm-text">L'operazione non si può annullare.</p>
+    <div class="btn-row">
+      <button type="button" value="cancel" id="confirm-no" class="btn btn-secondary">Annulla</button>
+      <button type="button" value="ok" id="confirm-yes" class="btn btn-danger">Elimina</button>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Icone -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <symbol id="glass" viewBox="0 0 64 64"><path fill="currentColor" d="M18 6h28c1 9 2 16 0 22-2 7-8 11-12 11.6V54h9a2 2 0 1 1 0 4H21a2 2 0 1 1 0-4h9V39.6C26 39 20 35 18 28c-2-6-1-13 0-22zm3.6 4c-.5 6-.6 11 .9 15.6h19c1.5-4.6 1.4-9.6.9-15.6z"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M4 7h3l2-3h6l2 3h3v12H4z"/><circle cx="12" cy="13" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 17l5-5 4 4 3-3 6 6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="15.5" cy="8.5" r="1.5" fill="currentColor"/></symbol>
+    <symbol id="i-barcode" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="2" d="M4 5v14M7 5v14M11 5v14M14 5v14M18 5v14M20.5 5v14"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5" fill="currentColor"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="2.5" stroke-linecap="round" d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2zM9 4v14M15 6v14"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/><path fill="none" stroke="currentColor" stroke-width="2" d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2l2 6.5L20.5 11 14 13l-2 7-2-7-6.5-2L10 8.5zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></symbol>
+  </svg>
+
+  <script src="vendor/exifr.lite.umd.js" defer></script>
+  <script src="vendor/leaflet/leaflet.js" defer></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
