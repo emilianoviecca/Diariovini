@@ -12,7 +12,7 @@ const LABELS = { name: 'nome', winery: 'cantina', producer: 'produttore', vintag
 const els = {
   title: $('#page-title'), main: $('#main'),
   views: { list: $('#view-list'), edit: $('#view-edit'), detail: $('#view-detail'), map: $('#view-map'), settings: $('#view-settings') },
-  form: $('#wine-form'), list: $('#wine-list'), empty: $('#empty-state'), count: $('#list-count'), search: $('#search-input'),
+  form: $('#wine-form'), list: $('#wine-groups'), empty: $('#empty-state'), count: $('#list-count'), search: $('#search-input'),
   photoPreview: $('#photo-preview'), photoImg: $('#photo-img'), aiBtn: $('#ai-read'),
   lookupStatus: $('#lookup-status'), gpsStatus: $('#gps-status'), rating: $('#rating'),
 };
@@ -68,7 +68,7 @@ async function route() {
   releaseURLs();
   let view = 'list', title = 'Sorsi', tab = 'list';
 
-  if (page === 'nuovo') { view = 'edit'; title = 'Nuovo vino'; tab = 'edit'; await openForm(null); }
+  if (page === 'nuovo') { view = 'edit'; title = 'Nuovo vino'; tab = ''; await openForm(null); }
   else if (page === 'modifica' && id) { view = 'edit'; title = 'Modifica vino'; tab = 'list'; await openForm(id); }
   else if (page === 'vino' && id) { view = 'detail'; title = 'Scheda vino'; tab = 'list'; if (!(await renderDetail(id))) return (location.hash = '#/'); }
   else if (page === 'mappa') { view = 'map'; title = 'Dove ho bevuto'; tab = 'map'; }
@@ -76,7 +76,8 @@ async function route() {
   else { await renderList(); }
 
   Object.entries(els.views).forEach(([k, el]) => { el.hidden = k !== view; });
-  const sub = view === 'detail' || (view === 'edit' && page === 'modifica');
+  const sub = view === 'detail' || view === 'edit';
+  $('#fab').hidden = view === 'edit' || view === 'settings';
   $('#back-btn').hidden = !sub;
   $('#brand-dot').hidden = sub;
   els.title.textContent = title;
@@ -91,28 +92,41 @@ async function route() {
 }
 
 /* ---------------- Lista ---------------- */
-async function renderList() {
-  const all = await db.all();
-  const q = els.search.value.trim().toLowerCase();
-  const items = q ? all.filter(w => FIELDS.some(f => (w[f] || '').toString().toLowerCase().includes(q))) : all;
-  els.list.innerHTML = '';
-  els.empty.hidden = all.length > 0;
-  els.count.textContent = all.length ? (q ? `${items.length} su ${all.length} vini` : `${all.length} ${all.length === 1 ? 'vino' : 'vini'}`) : '';
-  for (const w of items) {
-    const li = document.createElement('li');
-    li.className = 'wine-item';
-    const thumb = w.thumb ? `<img class="wine-thumb" src="${trackURL(w.thumb)}" alt="">`
-      : `<span class="wine-thumb placeholder" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#glass"/></svg></span>`;
-    const sub = [w.winery, w.vintage].filter(Boolean).join(' · ');
-    const meta = [w.date ? new Date(w.date).toLocaleDateString('it-IT') : '', w.place].filter(Boolean).join(' · ');
-    li.innerHTML = `<a href="#/vino/${w.id}">${thumb}<span class="wine-info">
+const TYPE_GROUPS = [
+  ['Rosso', 'Rossi', '#7c2a36'], ['Bianco', 'Bianchi', '#e2c46a'], ['Rosato', 'Rosati', '#e3a29a'],
+  ['Bollicine', 'Bollicine', '#f0d98c'], ['Dolce / passito', 'Dolci e passiti', '#c98a2c'],
+  ['Fortificato', 'Fortificati', '#6b3a1e'], ['Altro', 'Altri', '#9c8a70'], ['', 'Senza tipologia', '#cdbb9c'],
+];
+
+function wineCard(w) {
+  const thumb = w.thumb ? `<img class="wine-thumb" src="${trackURL(w.thumb)}" alt="">`
+    : `<span class="wine-thumb placeholder" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#glass"/></svg></span>`;
+  const sub = [w.winery, w.vintage].filter(Boolean).join(' · ');
+  const meta = [w.date ? new Date(w.date).toLocaleDateString('it-IT') : '', w.place].filter(Boolean).join(' · ');
+  return `<li class="wine-item"><a href="#/vino/${w.id}">${thumb}<span class="wine-info">
       <span class="wine-name">${esc(w.name || 'Vino senza nome')}</span>
       ${sub ? `<span class="wine-sub">${esc(sub)}</span>` : ''}
       ${w.rating ? `<span class="stars" aria-label="Voto ${w.rating} su 5">${stars(w.rating)}</span>` : ''}
       ${meta ? `<span class="wine-meta">${esc(meta)}</span>` : ''}
-    </span></a>`;
-    els.list.appendChild(li);
-  }
+    </span></a></li>`;
+}
+
+async function renderList() {
+  const all = await db.all();
+  const q = els.search.value.trim().toLowerCase();
+  const items = q ? all.filter(w => FIELDS.some(f => (w[f] || '').toString().toLowerCase().includes(q))) : all;
+  els.empty.hidden = all.length > 0;
+  els.count.textContent = all.length ? (q ? `${items.length} su ${all.length} vini` : `${all.length} ${all.length === 1 ? 'vino' : 'vini'}`) : '';
+  const known = TYPE_GROUPS.map(g => g[0]);
+  els.list.innerHTML = TYPE_GROUPS.map(([type, label, color]) => {
+    const group = items.filter(w => (known.includes(w.type || '') ? (w.type || '') : 'Altro') === type);
+    if (!group.length) return '';
+    return `<section class="type-group" aria-labelledby="g-${known.indexOf(type)}">
+      <h2 class="group-title" id="g-${known.indexOf(type)}"><span class="type-dot" style="--dot:${color}" aria-hidden="true"></span>${label}<span class="group-count">${group.length}</span></h2>
+      <ul class="wine-list">${group.map(wineCard).join('')}</ul>
+    </section>`;
+  }).join('');
+  if (q && !items.length) els.list.innerHTML = '<p class="muted">Nessun vino corrisponde alla ricerca.</p>';
 }
 let searchT;
 els.search.addEventListener('input', () => { clearTimeout(searchT); searchT = setTimeout(renderList, 150); });
@@ -462,6 +476,14 @@ $('#import-json').addEventListener('change', async e => {
 });
 
 /* ---------------- Avvio ---------------- */
+(function splash() {
+  const el = $('#splash');
+  $('#splash-version').textContent = VERSION === 'web' ? 'versione web' : `versione ${VERSION}`;
+  let seen = false;
+  try { seen = sessionStorage.getItem('sorsi.splash') === '1'; sessionStorage.setItem('sorsi.splash', '1'); } catch { /* */ }
+  if (seen) { el.remove(); return; }
+  setTimeout(() => { el.classList.add('hide'); setTimeout(() => el.remove(), 500); }, 1500);
+})();
 window.addEventListener('hashchange', route);
 route();
 

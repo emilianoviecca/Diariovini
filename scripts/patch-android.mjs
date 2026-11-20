@@ -7,6 +7,7 @@ const app = 'android/app';
 const res = `${app}/src/main/res`;
 const OCHRE = '#C68D2C';
 const SAND = '#F0DEB3';
+const SPLASH = '#F6EDDD';
 
 // 1. Permessi
 const manifestPath = `${app}/src/main/AndroidManifest.xml`;
@@ -24,7 +25,7 @@ writeFileSync(manifestPath, manifest);
 // 2. Icone
 cpSync('android-res', res, { recursive: true });
 writeFileSync(`${res}/values/ic_launcher_background.xml`,
-  `<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <color name="ic_launcher_background">${SAND}</color>\n</resources>\n`);
+  `<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <color name="ic_launcher_background">${SAND}</color>\n    <color name="splash_background">${SPLASH}</color>\n</resources>\n`);
 // rimuove il primo piano vettoriale di default (ha la precedenza sui PNG)
 rmSync(`${res}/drawable-v24/ic_launcher_foreground.xml`, { force: true });
 
@@ -35,7 +36,7 @@ for (const dir of readdirSync(res)) {
 }
 writeFileSync(`${res}/drawable/splash.xml`, `<?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@color/ic_launcher_background" />
+    <item android:drawable="@color/splash_background" />
     <item><bitmap android:gravity="center" android:src="@mipmap/ic_launcher_foreground" /></item>
 </layer-list>
 `);
@@ -44,7 +45,7 @@ let styles = readFileSync(stylesPath, 'utf8');
 if (!styles.includes('windowSplashScreenBackground')) {
   styles = styles.replace('<item name="android:background">@drawable/splash</item>',
     `<item name="android:background">@drawable/splash</item>
-        <item name="windowSplashScreenBackground">@color/ic_launcher_background</item>
+        <item name="windowSplashScreenBackground">@color/splash_background</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
         <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>`);
 }

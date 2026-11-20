@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs>
+  <filter id="wob" filterUnits="userSpaceOnUse" x="-100" y="-100" width="700" height="700">
+    <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="2" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="8" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="soft" filterUnits="userSpaceOnUse" x="-100" y="-100" width="700" height="700">
+    <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="3" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="18" xChannelSelector="R" yChannelSelector="G"/>
+    <feGaussianBlur stdDeviation="1.2"/>
+  </filter>
+</defs><g filter="url(#soft)"><circle cx="52.8" cy="108.0" r="3.5" fill="#b97c24" opacity="0.64"/><circle cx="122.6" cy="21.8" r="1.6" fill="#b97c24" opacity="0.73"/><circle cx="56.7" cy="52.2" r="7.0" fill="#b97c24" opacity="0.59"/><circle cx="160.6" cy="95.7" r="5.0" fill="#b97c24" opacity="0.46"/><circle cx="124.3" cy="166.2" r="4.4" fill="#b97c24" opacity="0.70"/><circle cx="130.9" cy="21.5" r="5.7" fill="#b97c24" opacity="0.64"/><circle cx="64.2" cy="15.6" r="6.3" fill="#b97c24" opacity="0.59"/><circle cx="139.4" cy="168.2" r="5.4" fill="#b97c24" opacity="0.77"/><circle cx="81.1" cy="154.2" r="3.9" fill="#b97c24" opacity="0.77"/></g></svg>

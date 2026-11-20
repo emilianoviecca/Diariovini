@@ -36,7 +36,7 @@
         <input id="search-input" type="search" placeholder="Cerca per nome, cantina, vitigno, luogo…" autocomplete="off">
       </div>
       <p id="list-count" class="muted" aria-live="polite"></p>
-      <ul id="wine-list" class="wine-list"></ul>
+      <div id="wine-groups"></div>
       <div id="empty-state" class="empty" hidden>
         <img src="img/empty.svg" alt="" class="empty-art" width="180" height="180">
         <p class="empty-title">Nessun sorso ancora</p>
@@ -199,10 +199,22 @@
 
   <nav class="tabbar" aria-label="Sezioni">
     <a href="#/" data-tab="list"><svg aria-hidden="true" class="ico"><use href="#i-list"/></svg><span>Vini</span></a>
-    <a href="#/nuovo" data-tab="edit" class="tab-add"><svg aria-hidden="true" class="ico"><use href="#i-plus"/></svg><span>Aggiungi</span></a>
     <a href="#/mappa" data-tab="map"><svg aria-hidden="true" class="ico"><use href="#i-map"/></svg><span>Mappa</span></a>
     <a href="#/impostazioni" data-tab="settings"><svg aria-hidden="true" class="ico"><use href="#i-gear"/></svg><span>Altro</span></a>
   </nav>
+
+  <a href="#/nuovo" id="fab" class="fab">
+    <svg aria-hidden="true" class="ico"><use href="#i-plus"/></svg>
+    <span class="visually-hidden">Aggiungi un vino</span>
+  </a>
+
+  <!-- Pagina d'avvio -->
+  <div id="splash" class="splash" aria-hidden="true">
+    <img src="icons/icon-512.png" alt="" class="splash-icon" width="128" height="128">
+    <p class="splash-name">Sorsi</p>
+    <p class="splash-tag">il diario dei vini che hai bevuto</p>
+    <p class="splash-version" id="splash-version"></p>
+  </div>
 
   <!-- Scanner -->
   <dialog id="scanner" class="scanner" aria-labelledby="scanner-title">
