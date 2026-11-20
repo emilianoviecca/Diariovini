@@ -3,6 +3,7 @@ import { compressImage, readExif, getPosition, reverseGeocode, blobToDataURL, da
 import { scanLive, scanImage, validEan } from './scanner.js';
 import { lookupBarcode } from './lookup.js';
 import { readLabel, getAISettings, saveAISettings, DEFAULT_MODEL } from './ai.js';
+import { VERSION } from './version.js';
 
 const $ = (s, el = document) => el.querySelector(s);
 const FIELDS = ['barcode', 'name', 'winery', 'producer', 'vintage', 'type', 'grape', 'origin', 'abv', 'price', 'date', 'place', 'notes'];
@@ -397,6 +398,7 @@ function renderSettings() {
   $('#s-apikey').value = s.key;
   $('#s-model').value = s.model;
   setStatus($('#settings-status'), ''); setStatus($('#backup-status'), '');
+  $('#app-version').textContent = VERSION === 'web' ? 'Sorsi – versione web' : `Sorsi – versione ${VERSION}`;
   if (navigator.storage && navigator.storage.estimate) {
     navigator.storage.estimate().then(e => {
       $('#storage-info').textContent = `Spazio usato: ${(e.usage / 1048576).toFixed(1)} MB.`;

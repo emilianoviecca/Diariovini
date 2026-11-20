@@ -9,4 +9,5 @@ cpSync('node_modules/@capacitor/core/dist/capacitor.js', 'www/vendor/capacitor.j
 const html = readFileSync('www/index.html', 'utf8')
   .replace('<script type="module" src="js/app.js"></script>', '<script src="vendor/capacitor.js"></script>\n  <script type="module" src="js/app.js"></script>');
 writeFileSync('www/index.html', html);
+writeFileSync('www/js/version.js', `export const VERSION = '1.0.${process.env.BUILD_NUMBER || '0'}';\n`);
 console.log('www pronta');
