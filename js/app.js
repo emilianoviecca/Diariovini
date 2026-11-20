@@ -75,6 +75,9 @@ async function route() {
   else { await renderList(); }
 
   Object.entries(els.views).forEach(([k, el]) => { el.hidden = k !== view; });
+  const sub = view === 'detail' || (view === 'edit' && page === 'modifica');
+  $('#back-btn').hidden = !sub;
+  $('#brand-dot').hidden = sub;
   els.title.textContent = title;
   document.title = title === 'Sorsi' ? 'Sorsi' : `${title} · Sorsi`;
   document.querySelectorAll('.tabbar a').forEach(a => {
@@ -117,22 +120,31 @@ els.search.addEventListener('input', () => { clearTimeout(searchT); searchT = se
 async function renderDetail(id) {
   const w = await db.get(id);
   if (!w) return false;
+  const tile = (label, value) => `<div class="card tile"><span class="section-label">${label}</span>${value}</div>`;
+  const tiles = [
+    w.vintage ? tile('Annata', `<span class="tile-value">${esc(w.vintage)}</span>`) : '',
+    w.abv ? tile('Gradazione', `<span class="tile-value">${esc(w.abv)}<small> % vol</small></span>`) : '',
+    w.rating ? tile('Voto', `<span class="stars" aria-hidden="true">${stars(w.rating)}</span><span class="visually-hidden">${w.rating} su 5</span>`) : '',
+    w.type ? tile('Tipologia', `<span class="tile-value" style="font-size:1.35rem">${esc(w.type)}</span>`) : '',
+  ].filter(Boolean);
   const rows = [
-    ['Cantina', w.winery], ['Produttore', w.producer !== w.winery ? w.producer : ''], ['Annata', w.vintage], ['Tipologia', w.type],
-    ['Vitigno', w.grape], ['Provenienza', w.origin], ['Gradazione', w.abv ? `${w.abv}% vol` : ''], ['Prezzo', w.price ? `€ ${w.price}` : ''],
+    ['Cantina', w.winery], ['Produttore', w.producer !== w.winery ? w.producer : ''],
+    ['Vitigno', w.grape], ['Provenienza', w.origin], ['Prezzo', w.price ? `€ ${w.price}` : ''],
     ['Bevuto il', formatDate(w.date)],
     ['Luogo', w.place ? (w.lat != null
       ? `<a href="https://www.openstreetmap.org/?mlat=${w.lat}&mlon=${w.lon}#map=17/${w.lat}/${w.lon}" rel="noopener">${esc(w.place)}</a>`
       : esc(w.place)) : ''],
-    ['Voto', w.rating ? `<span class="stars" aria-hidden="true">${stars(w.rating)}</span><span class="visually-hidden">${w.rating} su 5</span>` : ''],
     ['Note', w.notes], ['Codice', w.barcode],
   ].filter(([, v]) => v);
-  const html = (k, v) => (k === 'Luogo' || k === 'Voto') ? v : esc(v);
+  const html = (k, v) => k === 'Luogo' ? v : esc(v);
   $('#detail-body').innerHTML = `
-    ${w.photo ? `<img class="detail-photo" src="${trackURL(w.photo)}" alt="Etichetta di ${esc(w.name || 'vino')}">` : ''}
-    <h2 class="detail-title">${esc(w.name || 'Vino senza nome')}</h2>
-    <p class="detail-sub">${esc([w.winery, w.vintage].filter(Boolean).join(' · '))}</p>
-    <dl class="dl card">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${html(k, v)}</dd>`).join('')}</dl>`;
+    ${w.photo ? `<div class="card detail-photo-wrap"><img class="detail-photo" src="${trackURL(w.photo)}" alt="Etichetta di ${esc(w.name || 'vino')}"></div>` : ''}
+    <div class="detail-head">
+      <h2 class="detail-title">${esc(w.name || 'Vino senza nome')}</h2>
+      ${w.winery ? `<p class="detail-sub">${esc(w.winery)}</p>` : ''}
+    </div>
+    ${tiles.length ? `<div class="tiles">${tiles.join('')}</div>` : ''}
+    ${rows.length ? `<div class="card"><span class="section-label">Dettagli</span><dl class="dl">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${html(k, v)}</dd>`).join('')}</dl></div>` : ''}`;
   $('#detail-edit').onclick = () => { location.hash = `#/modifica/${id}`; };
   $('#detail-delete').onclick = async () => {
     if (await confirmDialog()) { await db.delete(id); toast('Vino eliminato'); location.hash = '#/'; }
@@ -348,6 +360,7 @@ els.form.addEventListener('submit', async e => {
   toast('Vino salvato');
   location.hash = `#/vino/${w.id}`;
 });
+$('#back-btn').addEventListener('click', () => (history.length > 1 ? history.back() : (location.hash = '#/')));
 $('#cancel-btn').addEventListener('click', () => history.length > 1 ? history.back() : (location.hash = '#/'));
 
 /* ---------------- Mappa ---------------- */

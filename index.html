@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#c68d2c">
+  <meta name="theme-color" content="#f6eddd">
   <meta name="description" content="Sorsi: il diario dei vini bevuti: foto dell'etichetta, data, luogo e dati dal codice a barre.">
   <title>Sorsi</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
-  <link rel="preload" href="vendor/fonts/caveat-brush-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="vendor/fonts/fraunces-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
 </head>
@@ -17,10 +17,15 @@
   <a class="skip-link" href="#main">Vai al contenuto</a>
 
   <header class="app-header" role="banner">
-    <h1 class="app-title">
-      <svg class="logo" aria-hidden="true" viewBox="0 0 64 64"><use href="#drop"/></svg>
-      <span id="page-title">Sorsi</span>
-    </h1>
+    <div class="topbar">
+      <button type="button" id="back-btn" class="round-btn" hidden>
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M15 5l-7 7 7 7"/></svg>
+        <span class="visually-hidden">Indietro</span>
+      </button>
+      <span id="brand-dot" class="round-btn brand-dot" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#drop"/></svg></span>
+      <h1 class="title-pill"><span id="page-title">Sorsi</span></h1>
+      <span aria-hidden="true"></span>
+    </div>
   </header>
 
   <main id="main" tabindex="-1">
