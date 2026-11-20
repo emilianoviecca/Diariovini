@@ -54,7 +54,7 @@
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; overflow-x: hidden; }
 body {
   margin: 0; min-height: 100vh;
   font: 400 1rem/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -79,9 +79,9 @@ a { color: var(--bronze); text-decoration-thickness: 1.5px; text-underline-offse
 .app-header {
   position: sticky; top: 0; z-index: 10;
   padding: calc(var(--safe-t) + .7rem) 1rem .7rem;
-  background: linear-gradient(to bottom, var(--bg1) 70%, rgb(246 237 221 / 0));
+  background: var(--bg1);
+  box-shadow: 0 10px 14px -12px rgb(110 72 28 / .35);
 }
-@media (prefers-color-scheme: dark) { .app-header { background: linear-gradient(to bottom, var(--bg1) 70%, rgb(34 26 19 / 0)); } }
 .topbar { display: grid; grid-template-columns: 48px 1fr 48px; align-items: center; gap: .5rem; max-width: 720px; margin: 0 auto; }
 .round-btn {
   width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center;
@@ -98,7 +98,7 @@ a { color: var(--bronze); text-decoration-thickness: 1.5px; text-underline-offse
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
-main { padding: .25rem 1rem 1rem; max-width: 720px; margin: 0 auto; }
+main { padding: .9rem 1rem 1rem; max-width: 720px; margin: 0 auto; }
 main:focus { outline: none; box-shadow: none; }
 .muted { color: var(--muted); font-size: .93rem; }
 
@@ -110,10 +110,11 @@ main:focus { outline: none; box-shadow: none; }
   padding: 1.05rem 1.1rem 1.15rem; margin: 0 0 1rem; min-width: 0;
 }
 .section-label, legend, .card h2 {
-  display: block; float: left; width: 100%; padding: 0; margin: 0 0 .85rem;
+  display: block; width: 100%; padding: 0; margin: 0 0 .85rem;
   font: 650 .78rem/1.3 system-ui, sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--bronze);
 }
-.card h2 { float: none; }
+/* solo la legenda dei moduli va resa flottante, per stare dentro il riquadro */
+fieldset.card > legend { float: left; }
 fieldset.card > :not(legend) { clear: both; }
 
 .field { margin: 0 0 .85rem; }
