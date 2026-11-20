@@ -42,7 +42,18 @@ function formatDate(s) {
 }
 function esc(s) { return (s ?? '').toString().replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
 function stars(n) { n = Number(n) || 0; return n ? '★'.repeat(n) + '☆'.repeat(5 - n) : ''; }
-function download(blob, name) {
+const isNative = () => Boolean(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+let nativePlugins;
+async function download(blob, name) {
+  if (isNative()) {
+    // Nell'app Android: salva il file e apre il menu Condividi (Drive, email, File…)
+    nativePlugins = nativePlugins || { fs: window.Capacitor.registerPlugin('Filesystem'), share: window.Capacitor.registerPlugin('Share') };
+    const data = (await blobToDataURL(blob)).split(',')[1];
+    await nativePlugins.fs.writeFile({ path: name, data, directory: 'CACHE' });
+    const { uri } = await nativePlugins.fs.getUri({ path: name, directory: 'CACHE' });
+    await nativePlugins.share.share({ title: name, files: [uri], dialogTitle: 'Salva o condividi' });
+    return;
+  }
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob); a.download = name;
   document.body.appendChild(a); a.click(); a.remove();
@@ -387,7 +398,8 @@ $('#save-settings').addEventListener('click', () => {
 
 const stamp = () => new Date().toISOString().slice(0, 10).replace(/-/g, '');
 
-$('#export-json').addEventListener('click', async () => {
+$('#export-json').addEventListener('click', () => exportJSON().catch(() => setStatus($('#backup-status'), 'Backup non completato.', 'err')));
+async function exportJSON() {
   setStatus($('#backup-status'), 'Preparo il backup…');
   const all = await db.all();
   const out = [];
@@ -397,19 +409,20 @@ $('#export-json').addEventListener('click', async () => {
     o.thumb = w.thumb ? await blobToDataURL(w.thumb) : null;
     out.push(o);
   }
-  download(new Blob([JSON.stringify({ app: 'diariovini', version: 1, exportedAt: new Date().toISOString(), wines: out })], { type: 'application/json' }), `diariovini_backup_${stamp()}.json`);
-  setStatus($('#backup-status'), `Backup di ${all.length} vini scaricato.`, 'ok');
-});
+  await download(new Blob([JSON.stringify({ app: 'diariovini', version: 1, exportedAt: new Date().toISOString(), wines: out })], { type: 'application/json' }), `diariovini_backup_${stamp()}.json`);
+  setStatus($('#backup-status'), `Backup di ${all.length} vini pronto.`, 'ok');
+}
 
-$('#export-csv').addEventListener('click', async () => {
+$('#export-csv').addEventListener('click', () => exportCSV().catch(() => setStatus($('#backup-status'), 'Esportazione non completata.', 'err')));
+async function exportCSV() {
   const all = await db.all();
   const cols = ['date', 'name', 'winery', 'producer', 'vintage', 'type', 'grape', 'origin', 'abv', 'price', 'rating', 'place', 'lat', 'lon', 'barcode', 'notes'];
   const head = ['Data', 'Nome', 'Cantina', 'Produttore', 'Annata', 'Tipologia', 'Vitigno', 'Provenienza', 'Gradazione', 'Prezzo', 'Voto', 'Luogo', 'Latitudine', 'Longitudine', 'Codice', 'Note'];
   const q = v => `"${(v ?? '').toString().replace(/"/g, '""')}"`;
   const csv = '﻿' + [head.map(q).join(';'), ...all.map(w => cols.map(c => q(w[c])).join(';'))].join('\r\n');
-  download(new Blob([csv], { type: 'text/csv;charset=utf-8' }), `diariovini_${stamp()}.csv`);
-  setStatus($('#backup-status'), 'Tabella CSV scaricata.', 'ok');
-});
+  await download(new Blob([csv], { type: 'text/csv;charset=utf-8' }), `diariovini_${stamp()}.csv`);
+  setStatus($('#backup-status'), 'Tabella CSV pronta.', 'ok');
+}
 
 $('#import-json').addEventListener('change', async e => {
   const f = e.target.files[0]; e.target.value = '';
@@ -437,6 +450,6 @@ $('#import-json').addEventListener('change', async e => {
 window.addEventListener('hashchange', route);
 route();
 
-if ('serviceWorker' in navigator && location.protocol === 'https:') {
+if ('serviceWorker' in navigator && location.protocol === 'https:' && !isNative()) {
   navigator.serviceWorker.register('sw.js').catch(() => {});
 }

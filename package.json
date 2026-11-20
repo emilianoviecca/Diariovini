@@ -1,0 +1,20 @@
+{
+  "name": "diariovini",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Diario Vini – app Android (Capacitor) costruita dalla web app",
+  "scripts": {
+    "www": "node scripts/prepare-www.mjs",
+    "android": "npm run www && npx cap add android && node scripts/patch-android.mjs && npx cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.0.0",
+    "@capacitor/app": "^8.0.0",
+    "@capacitor/core": "^8.0.0",
+    "@capacitor/filesystem": "^8.0.0",
+    "@capacitor/share": "^8.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.0.0"
+  }
+}

@@ -28,3 +28,11 @@ js/ai.js              lettura etichetta con Claude (opzionale)
 sw.js                 service worker (offline)
 vendor/               exifr, ZXing, Leaflet (licenze incluse)
 ```
+
+## App Android (APK)
+Ad ogni modifica su `main`, GitHub Actions compila l'app Android (Capacitor) e la pubblica tra le Release.
+Link sempre aggiornato all'ultima versione:
+**https://github.com/emilianoviecca/diariovini/releases/latest/download/diariovini.apk**
+
+Gli aggiornamenti si installano sopra la versione precedente senza perdere i dati
+(l'APK è sempre firmato con la stessa chiave, in `android-signing/`: è una chiave di debug, non adatta al Play Store).

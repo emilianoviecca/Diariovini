@@ -1,0 +1,8 @@
+{
+  "appId": "it.emilianoviecca.diariovini",
+  "appName": "Diario Vini",
+  "webDir": "www",
+  "android": {
+    "backgroundColor": "#f0deb3"
+  }
+}
