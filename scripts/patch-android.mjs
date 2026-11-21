@@ -54,7 +54,25 @@ styles = styles
   .replace('<item name="colorPrimaryDark">@color/colorPrimaryDark</item>', `<item name="colorPrimaryDark">${OCHRE}</item>`);
 writeFileSync(stylesPath, styles);
 
-// 4. Versione (numero build da GitHub Actions)
+// 4. Firma: sempre la stessa chiave (android-signing/debug.keystore), così gli aggiornamenti si installano sopra
+{
+  const g = `${app}/build.gradle`;
+  let t = readFileSync(g, 'utf8');
+  if (!t.includes('android-signing/debug.keystore')) {
+    t = t.replace(/android\s*\{/, `android {
+    signingConfigs {
+        debug {
+            storeFile file('../../android-signing/debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+    }`);
+    writeFileSync(g, t);
+  }
+}
+
+// 5. Versione (numero build da GitHub Actions)
 const build = process.env.BUILD_NUMBER || '1';
 const gradlePath = `${app}/build.gradle`;
 let gradle = readFileSync(gradlePath, 'utf8');

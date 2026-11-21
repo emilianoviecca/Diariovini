@@ -42,12 +42,16 @@ jobs:
       - name: Compila APK
         working-directory: android
         run: |
-          mkdir -p ~/.android
-          cp ../android-signing/debug.keystore ~/.android/debug.keystore
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
           cp app/build/outputs/apk/debug/app-debug.apk ../sorsi.apk
           cp app/build/outputs/apk/debug/app-debug.apk ../sorsi-1.0.${{ github.run_number }}.apk
+
+      - name: Verifica la firma (deve essere sempre la stessa)
+        run: |
+          APKSIGNER=$(ls $ANDROID_HOME/build-tools/*/apksigner | sort -V | tail -1)
+          $APKSIGNER verify --print-certs sorsi.apk | tee certs.txt
+          grep -qi "72fc6f779bcf406a64c26a40eb28dd1dabc95fc914ea49870afcd47f08e53128" certs.txt || { echo "Firma sbagliata: release bloccata"; exit 1; }
 
       - name: Pubblica release
         uses: softprops/action-gh-release@v2
