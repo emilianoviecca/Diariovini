@@ -52,7 +52,7 @@
   }
 }
 
-* { box-sizing: border-box; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 [hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; overflow-x: hidden; }
 body {
@@ -266,8 +266,16 @@ textarea { resize: vertical; }
   border: 1px solid rgb(110 72 28 / .35);
   box-shadow: inset 0 1px 0 rgb(255 255 255 / .45), 0 10px 22px -8px rgb(110 72 28 / .65), 0 2px 5px rgb(110 72 28 / .25);
 }
-.fab .ico { width: 28px; height: 28px; }
-.fab:active { transform: translateY(1px); }
+.fab .ico { width: 28px; height: 28px; transition: transform .12s ease; }
+.fab { transition: transform .12s ease, box-shadow .12s ease, background .12s ease; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+/* effetto pressione: il pulsante "affonda" nella pagina */
+.fab:active, .fab.pressed {
+  transform: translateY(2px) scale(.93);
+  background: linear-gradient(var(--ochre-2), var(--ochre-deep));
+  box-shadow: inset 0 3px 6px rgb(60 38 14 / .45), 0 3px 8px -4px rgb(110 72 28 / .5);
+}
+.fab:active .ico, .fab.pressed .ico { transform: scale(.92); }
+@media (prefers-reduced-motion: reduce) { .fab:active, .fab.pressed { transform: none; } }
 .toast { bottom: calc(var(--tabbar-h) + var(--safe-b) + 92px) !important; }
 
 /* ---------- Scanner ---------- */

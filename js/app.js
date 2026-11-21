@@ -477,6 +477,16 @@ $('#import-json').addEventListener('change', async e => {
   }
 });
 
+/* ---------------- Pulsante + ---------------- */
+{
+  const fab = $('#fab');
+  const on = () => fab.classList.add('pressed');
+  const off = () => fab.classList.remove('pressed');
+  fab.addEventListener('pointerdown', on);
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(ev => fab.addEventListener(ev, off));
+  window.addEventListener('hashchange', off);
+}
+
 /* ---------------- Aggiornamenti ---------------- */
 function showUpdate(u) {
   $('#update-version').textContent = `Versione ${u.version} (tu hai la ${VERSION})`;
