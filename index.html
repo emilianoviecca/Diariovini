@@ -31,6 +31,10 @@
   <main id="main" tabindex="-1">
     <!-- ===== LISTA ===== -->
     <section id="view-list" class="view" aria-labelledby="page-title">
+      <div id="update-banner" class="card update-banner" role="status" hidden>
+        <p class="update-text"><strong>Nuova versione disponibile</strong><br><span id="update-version"></span></p>
+        <a id="update-link" class="btn btn-primary" href="#">Scarica</a>
+      </div>
       <div class="search">
         <label for="search-input" class="visually-hidden">Cerca tra i vini</label>
         <input id="search-input" type="search" placeholder="Cerca per nome, cantina, vitigno, luogo…" autocomplete="off">
@@ -40,7 +44,7 @@
       <div id="empty-state" class="empty" hidden>
         <img src="img/empty.svg" alt="" class="empty-art" width="180" height="180">
         <p class="empty-title">Nessun sorso ancora</p>
-        <p>Tocca <strong>Aggiungi</strong> per registrare il primo: foto dell'etichetta, e data e luogo si compilano da soli.</p>
+        <p>Tocca il pulsante <strong>+</strong> in basso per registrare il primo: foto dell'etichetta, e data e luogo si compilano da soli.</p>
       </div>
     </section>
 
@@ -186,6 +190,13 @@
         <div class="field"><label for="s-model">Modello</label><input id="s-model" autocomplete="off"></div>
         <button type="button" id="save-settings" class="btn btn-primary">Salva impostazioni</button>
         <p id="settings-status" class="status" role="status" aria-live="polite"></p>
+      </div>
+
+      <div class="card" id="updates-card" hidden>
+        <h2>Aggiornamenti</h2>
+        <p class="muted">All'apertura Sorsi controlla se su GitHub c'è una versione più nuova.</p>
+        <button type="button" id="check-update" class="btn btn-secondary">Controlla ora</button>
+        <p id="update-status" class="status" role="status" aria-live="polite"></p>
       </div>
 
       <div class="card">

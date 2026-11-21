@@ -184,6 +184,12 @@ textarea { resize: vertical; }
 .rating button.on { color: var(--star); }
 .form-actions { display: grid; gap: .4rem; }
 
+/* ---------- Avviso aggiornamento ---------- */
+.update-banner { display: flex; align-items: center; gap: .8rem; border-color: var(--ochre-2); }
+.update-banner .update-text { margin: 0; flex: 1; min-width: 0; color: var(--muted); font-size: .92rem; }
+.update-banner .update-text strong { color: var(--text); font-family: var(--serif); font-size: 1.05rem; }
+.update-banner .btn { flex: none; }
+
 /* ---------- Lista ---------- */
 .type-group { margin: 0 0 1.4rem; }
 .group-title {

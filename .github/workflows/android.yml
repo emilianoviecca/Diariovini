@@ -47,6 +47,7 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
           cp app/build/outputs/apk/debug/app-debug.apk ../sorsi.apk
+          cp app/build/outputs/apk/debug/app-debug.apk ../sorsi-1.0.${{ github.run_number }}.apk
 
       - name: Pubblica release
         uses: softprops/action-gh-release@v2
@@ -54,7 +55,9 @@ jobs:
           tag_name: v1.0.${{ github.run_number }}
           name: Sorsi 1.0.${{ github.run_number }}
           body: |
-            APK per Android. Scaricalo dal telefono e aprilo per installarlo
-            (al primo avvio Android chiede di consentire l'installazione da questa fonte).
-          files: sorsi.apk
+            APK per Android: scarica sorsi-1.0.${{ github.run_number }}.apk dal telefono e aprilo per installarlo.
+            Si installa sopra la versione precedente senza perdere i vini.
+          files: |
+            sorsi.apk
+            sorsi-1.0.${{ github.run_number }}.apk
           make_latest: true

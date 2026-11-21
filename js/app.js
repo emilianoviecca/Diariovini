@@ -4,6 +4,7 @@ import { scanLive, scanImage, validEan } from './scanner.js';
 import { lookupBarcode } from './lookup.js';
 import { readLabel, getAISettings, saveAISettings, DEFAULT_MODEL } from './ai.js';
 import { VERSION } from './version.js';
+import { checkForUpdate, isApp } from './update.js';
 
 const $ = (s, el = document) => el.querySelector(s);
 const FIELDS = ['barcode', 'name', 'winery', 'producer', 'vintage', 'type', 'grape', 'origin', 'abv', 'price', 'date', 'place', 'notes'];
@@ -412,6 +413,7 @@ function renderSettings() {
   $('#s-apikey').value = s.key;
   $('#s-model').value = s.model;
   setStatus($('#settings-status'), ''); setStatus($('#backup-status'), '');
+  $('#updates-card').hidden = !isApp();
   $('#app-version').textContent = VERSION === 'web' ? 'Sorsi – versione web' : `Sorsi – versione ${VERSION}`;
   if (navigator.storage && navigator.storage.estimate) {
     navigator.storage.estimate().then(e => {
@@ -475,6 +477,26 @@ $('#import-json').addEventListener('change', async e => {
   }
 });
 
+/* ---------------- Aggiornamenti ---------------- */
+function showUpdate(u) {
+  $('#update-version').textContent = `Versione ${u.version} (tu hai la ${VERSION})`;
+  $('#update-link').href = u.url;
+  $('#update-link').setAttribute('aria-label', `Scarica la versione ${u.version}`);
+  $('#update-banner').hidden = false;
+}
+async function autoCheckUpdate() {
+  try { const u = await checkForUpdate(); if (u) showUpdate(u); } catch { /* offline: riprova al prossimo avvio */ }
+}
+$('#check-update').addEventListener('click', async () => {
+  const st = $('#update-status');
+  setStatus(st, 'Controllo…');
+  try {
+    const u = await checkForUpdate();
+    if (u) { showUpdate(u); setStatus(st, `È disponibile la versione ${u.version}: trovi il pulsante Scarica nella pagina Vini.`, 'ok'); }
+    else setStatus(st, `Hai già l'ultima versione (${VERSION}).`, 'ok');
+  } catch { setStatus(st, 'Controllo non riuscito: sei online?', 'err'); }
+});
+
 /* ---------------- Avvio ---------------- */
 (function splash() {
   const el = $('#splash');
@@ -486,6 +508,7 @@ $('#import-json').addEventListener('change', async e => {
 })();
 window.addEventListener('hashchange', route);
 route();
+autoCheckUpdate();
 
 if ('serviceWorker' in navigator && location.protocol === 'https:' && !isNative()) {
   navigator.serviceWorker.register('sw.js').catch(() => {});

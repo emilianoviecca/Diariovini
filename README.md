@@ -36,5 +36,7 @@ Ad ogni modifica su `main`, GitHub Actions compila l'app Android (Capacitor) e l
 Link sempre aggiornato all'ultima versione:
 **https://github.com/emilianoviecca/diariovini/releases/latest/download/sorsi.apk**
 
+Ogni release contiene anche il file con la versione nel nome (es. `sorsi-1.0.7.apk`). L'app avvisa da sola quando ne esce una nuova.
+
 Gli aggiornamenti si installano sopra la versione precedente senza perdere i dati
 (l'APK è sempre firmato con la stessa chiave, in `android-signing/`: è una chiave di debug, non adatta al Play Store).
